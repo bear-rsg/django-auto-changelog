@@ -1,0 +1,29 @@
+<div class="overflow">
+    <table id="changelogtable">
+        <thead>
+            <tr>
+                {% if showreferrer %}
+                    <th>Referring object</th>
+                {% endif %}
+                <th>Notes</th>
+                <th>Ref</th>
+                <th>Done By</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for change in changes %}
+                <tr>
+                    {% if showreferrer %}
+                        <td>{{ change.referrer}}</td>
+                    {% endif %}
+                    <td>{{ change.notes | linebreaksbr }}</td>
+                    <td>{{ change.reference }}</td>
+                    <td>{{ change.calling_user }}</td>
+                    <td data-sort="{{ change.timestamp | date:"U" }}">{{ change.timestamp }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>$(document).ready(function() { $('#changelogtable').DataTable( { pageLength: 50, autoWidth: false, order: [[{% if showreferrer %}4{% else %}3{% endif %}, "desc" ]] } ); } );</script>
+</div>
