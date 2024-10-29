@@ -1,0 +1,12 @@
+*.pyc
+.vscode/
+.hidden/
+venv/
+.idea/
+.coverage
+htmlcov
+logs/
+*.swp
+*.egg-info
+
+modules_app.egg-info/
