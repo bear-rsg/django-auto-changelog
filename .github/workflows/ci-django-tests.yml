@@ -23,5 +23,5 @@ jobs:
         pip install -e ".[testing]"
     - name: Run Tests
       run: |
-        coverage run_tests.py
+        coverage run run_tests.py
         coverage report
