@@ -9,7 +9,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.6.8]
+        python-version: [3.9.20]
 
     steps:
     - uses: actions/checkout@v2
@@ -20,8 +20,8 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -e .
+        pip install -e ".[testing]"
     - name: Run Tests
       run: |
-        coverage run_tests.py
+        coverage run run_tests.py
         coverage report
