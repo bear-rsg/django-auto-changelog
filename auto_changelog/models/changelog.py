@@ -151,7 +151,7 @@ class ChangelogModelMixin(object):
                 uid = self.__class__.__name__  # make sure we only register once per class
                 m2m_changed.connect(m2m_changed_hook, sender=through, dispatch_uid=uid)
 
-    def save_with_changelog(self, save, save_kwargs):
+    def save_with_changelog(self, save, save_kwargs, reference='auto'):
         """
         Get the current object from the database, and compare it with what we've got now. Then create a new changelog
         entry for the differences. This involves an extra database query, but is simple and therefore preferable to
@@ -161,6 +161,7 @@ class ChangelogModelMixin(object):
 
         @param save: the save method to call (usually super().save)
         @param save_kwargs: the kwargs to pass to the save method
+        @param reference: optional reference for the changelog record
         """
         if not hasattr(self.__class__, 'changelog'):
             raise AttributeError("Model %s does not have a changelog field", self.__class__.__name__)
@@ -168,7 +169,7 @@ class ChangelogModelMixin(object):
         if self.id is None:
             # We have to save the object (for the first time) before adding a changelog
             save(**save_kwargs)
-            self.new_changelog(f"{self.__class__.__name__} created")
+            self.new_changelog(f"{self.__class__.__name__} created", reference=reference)
             # Register this object for any future m2m changes
             self._register()
             return
@@ -176,7 +177,7 @@ class ChangelogModelMixin(object):
         notes = find_changes(self)
         if notes:
             # Only add the changelog if there's something to say
-            self.new_changelog('\n'.join(notes))
+            self.new_changelog('\n'.join(notes), reference=reference)
 
         # Finally save the object
         save(**save_kwargs)
